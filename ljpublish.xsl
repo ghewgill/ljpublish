@@ -387,7 +387,12 @@
                 </div>
                 <xsl:choose>
                     <xsl:when test="props/opt_preformatted = '1'">
-                        <xsl:value-of select="event" disable-output-escaping="yes" />
+                        <xsl:variable name="body">
+                            <xsl:call-template name="lj-tags">
+                                <xsl:with-param name="s" select="event" />
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:value-of select="$body" disable-output-escaping="yes" />
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="body">
