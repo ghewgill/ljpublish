@@ -3,12 +3,15 @@
     version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xt="http://www.jclark.com/xt"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml"
     xmlns="http://www.w3.org/1999/xhtml"
     extension-element-prefixes="xt"
 >
 
-<xsl:output indent="yes" />
+<xsl:output
+    doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+    doctype-system="DTD/xhtml1-strict.dtd"
+    indent="yes"
+/>
 
 <xsl:template match="journal">
     <xsl:variable name="journal" select="." />
