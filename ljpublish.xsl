@@ -377,9 +377,15 @@
                     <a href="entries/{following-sibling::event[not(security)]/itemid}.html">next</a>
                 </div-->
                 <p>
-                    Date: <xsl:value-of select="eventtime" /><br />
+                    Date:
+                    <xsl:variable name="year" select="substring-before(eventtime, '-')" />
+                    <xsl:variable name="month" select="substring-before(substring-after(eventtime, '-'), '-')" />
+                    <a href="../calendar/{$year}.html"><xsl:value-of select="$year" /></a>-<a href="../calendar/{$year}-{$month}.html"><xsl:value-of select="$month" /></a>-<xsl:value-of select="substring-after(substring-after(eventtime, '-'), '-')" /><br />
                     <xsl:if test="props/taglist">
-                        Tags: <xsl:value-of select="props/taglist" />
+                        Tags:
+                        <xsl:call-template name="link-tags">
+                            <xsl:with-param name="taglist" select="props/taglist" />
+                        </xsl:call-template>
                     </xsl:if>
                 </p>
                 <div style="font-size: 150%;">
@@ -421,6 +427,28 @@
     </xt:document>
 </xsl:template>
 
+<xsl:template name="link-tags">
+    <xsl:param name="taglist" />
+    <xsl:variable name="tag">
+        <xsl:choose>
+            <xsl:when test="contains($taglist, ',')">
+                <xsl:value-of select="substring-before($taglist, ',')" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$taglist" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+    <a href="../tags/{$tag}.html"><xsl:value-of select="$tag" /></a>
+    <xsl:variable name="rest" select="substring-after($taglist, ', ')" />
+    <xsl:if test="$rest">
+        <xsl:if test="$rest">, </xsl:if>
+        <xsl:call-template name="link-tags">
+            <xsl:with-param name="taglist" select="$rest" />
+        </xsl:call-template>
+    </xsl:if>
+</xsl:template>
+
 <xsl:template name="format">
     <xsl:param name="s" />
     <xsl:choose>
@@ -443,11 +471,20 @@
         <xsl:when test="contains($s, '&lt;lj')">
             <xsl:value-of select="substring-before($s, '&lt;lj')" />
             <xsl:variable name="rest" select="substring-after($s, '&lt;lj')" />
-            <xsl:variable name="user" select="substring-before(substring-after($rest, 'user=&quot;'), '&quot;')" />
-            &lt;span class="ljuser" style="white-space: nowrap;"&gt;&lt;a href="http://www.livejournal.com/userinfo.bml?user=<xsl:value-of select="$user" />"&gt;&lt;img src="http://stat.livejournal.com/img/userinfo.gif" alt="[info]" width="17" height="17" style="vertical-align: bottom; border: 0;" /&gt;&lt;a href="http://www.livejournal.com/users/<xsl:value-of select="$user" />"&gt;&lt;strong&gt;<xsl:value-of select="$user" />&lt;/strong&gt;&lt;/a&gt;&lt;/span&gt;
-            <xsl:call-template name="lj-tags">
-                <xsl:with-param name="s" select="substring-after($rest, '&gt;')" />
-            </xsl:call-template>
+            <xsl:choose>
+                <xsl:when test="contains(substring-before($rest, '&gt;'), 'user=')">
+                    <xsl:variable name="user" select="substring-before(substring-after($rest, 'user=&quot;'), '&quot;')" />
+                    &lt;span class="ljuser" style="white-space: nowrap;"&gt;&lt;a href="http://www.livejournal.com/userinfo.bml?user=<xsl:value-of select="$user" />"&gt;&lt;img src="http://stat.livejournal.com/img/userinfo.gif" alt="[info]" width="17" height="17" style="vertical-align: bottom; border: 0;" /&gt;&lt;a href="http://www.livejournal.com/users/<xsl:value-of select="$user" />"&gt;&lt;strong&gt;<xsl:value-of select="$user" />&lt;/strong&gt;&lt;/a&gt;&lt;/span&gt;
+                    <xsl:call-template name="lj-tags">
+                        <xsl:with-param name="s" select="substring-after($rest, '&gt;')" />
+                    </xsl:call-template>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:call-template name="lj-tags">
+                        <xsl:with-param name="s" select="substring-after($rest, '&gt;')" />
+                    </xsl:call-template>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="$s" />
