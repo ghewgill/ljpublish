@@ -20,11 +20,7 @@
             <title>Journal</title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <link href="/style.css" rel="stylesheet" type="text/css" />
-            <style type="text/css">
-                th {
-                    text-align: left;
-                }
-            </style>
+            <link href="style.css" rel="stylesheet" type="text/css" />
         </head>
         <body>
             <div id="navbar">
@@ -36,7 +32,7 @@
             <p>
                 This is a mirror of <a href="http://ghewgill.livejournal.com">my ghewgill journal</a> which is published and maintained on livejournal.
             </p>
-            <p>
+            <p class="calendar">
                 <xsl:call-template name="yearlist">
                     <xsl:with-param name="prefix" select="'calendar/'" />
                 </xsl:call-template>
@@ -44,7 +40,7 @@
             <xsl:call-template name="yearpages">
                 <xsl:with-param name="journal" select="$journal" />
             </xsl:call-template>
-            <p>
+            <p class="tags">
                 <xsl:call-template name="taglist">
                     <xsl:with-param name="journal" select="$journal" />
                     <xsl:with-param name="prefix" select="'tags/'" />
@@ -62,9 +58,9 @@
             </xsl:call-template>
             <table>
                 <tr>
-                    <th>Date</th>
-                    <th>Title</th>
-                    <th>Tags</th>
+                    <th class="summary-heading">Date</th>
+                    <th class="summary-heading">Title</th>
+                    <th class="summary-heading">Tags</th>
                 </tr>
                 <xsl:for-each select="event[not(security)]">
                     <xsl:sort select="itemid" data-type="number" order="descending" />
@@ -94,11 +90,7 @@
                 <title>Journal</title>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <link href="/style.css" rel="stylesheet" type="text/css" />
-                <style type="text/css">
-                    th {
-                        text-align: left;
-                    }
-                </style>
+                <link href="../style.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <div id="navbar">
@@ -109,7 +101,7 @@
                     <xsl:value-of select="$tagname" />
                     <span id="navbar-search"><a href="/search.html">Search</a></span>
                 </div>
-                <p>
+                <p class="tags">
                     <xsl:call-template name="taglist">
                         <xsl:with-param name="journal" select="$journal" />
                         <xsl:with-param name="curtag" select="$tag" />
@@ -117,9 +109,9 @@
                 </p>
                 <table>
                     <tr>
-                        <th>Date</th>
-                        <th>Title</th>
-                        <th>Tags</th>
+                        <th class="summary-heading">Date</th>
+                        <th class="summary-heading">Title</th>
+                        <th class="summary-heading">Tags</th>
                     </tr>
                     <xsl:choose>
                         <xsl:when test="$tag">
@@ -159,11 +151,7 @@
                 <title>Journal</title>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <link href="/style.css" rel="stylesheet" type="text/css" />
-                <style type="text/css">
-                    th {
-                        text-align: left;
-                    }
-                </style>
+                <link href="../style.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <div id="navbar">
@@ -174,7 +162,7 @@
                     <xsl:value-of select="$date" />
                     <span id="navbar-search"><a href="/search.html">Search</a></span>
                 </div>
-                <p>
+                <p class="calendar">
                     <xsl:call-template name="yearlist" />
                     <br />
                     <a href="{substring($date, 1, 4)}-01.html">Jan</a>
@@ -192,9 +180,9 @@
                 </p>
                 <table>
                     <tr>
-                        <th>Date</th>
-                        <th>Title</th>
-                        <th>Tags</th>
+                        <th class="summary-heading">Date</th>
+                        <th class="summary-heading">Title</th>
+                        <th class="summary-heading">Tags</th>
                     </tr>
                     <xsl:for-each select="$journal/event[not(security)][starts-with(eventtime, $date)]">
                         <xsl:sort select="itemid" data-type="number" order="descending" />
@@ -362,6 +350,7 @@
                 <title><xsl:value-of select="subject" /></title>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <link href="/style.css" rel="stylesheet" type="text/css" />
+                <link href="../style.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <div id="navbar">
@@ -376,7 +365,7 @@
                     <a href="entries/{preceding-sibling::event[not(security)]/itemid}.html">prev</a>
                     <a href="entries/{following-sibling::event[not(security)]/itemid}.html">next</a>
                 </div-->
-                <p>
+                <div class="entry-header">
                     Date:
                     <xsl:variable name="year" select="substring-before(eventtime, '-')" />
                     <xsl:variable name="month" select="substring-before(substring-after(eventtime, '-'), '-')" />
@@ -387,8 +376,8 @@
                             <xsl:with-param name="taglist" select="props/taglist" />
                         </xsl:call-template>
                     </xsl:if>
-                </p>
-                <div style="font-size: 150%;">
+                </div>
+                <div class="entry-subject">
                     <xsl:value-of select="subject" />
                 </div>
                 <xsl:choose>
@@ -398,7 +387,9 @@
                                 <xsl:with-param name="s" select="event" />
                             </xsl:call-template>
                         </xsl:variable>
-                        <xsl:value-of select="$body" disable-output-escaping="yes" />
+                        <div class="entry-body">
+                            <xsl:value-of select="$body" disable-output-escaping="yes" />
+                        </div>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="body">
@@ -411,20 +402,71 @@
                                 <xsl:with-param name="s" select="$body" />
                             </xsl:call-template>
                         </xsl:variable>
-                        <p>
+                        <div class="entry-body">
                             <xsl:value-of select="$body" disable-output-escaping="yes" />
-                        </p>
+                        </div>
                     </xsl:otherwise>
                 </xsl:choose>
-                <p>
+                <p class="lj-link">
                     <a href="{url}">Link</a>
                 </p>
+                <xsl:if test="not(props/opt_nocomments) or props/opt_nocomments != '1'">
+                    <xsl:for-each select="comments/comment[string-length(parentid)=0]">
+                        <xsl:call-template name="comment">
+                            <xsl:with-param name="indent" select="0" />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:if>
                 <address>
                     Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
                 </address>
             </body>
         </html>
     </xt:document>
+</xsl:template>
+
+<xsl:template name="comment">
+    <xsl:param name="indent" />
+    <xsl:if test="string-length(body) and (not(state) or state = '' or state = 'A')">
+        <div class="comment" style="margin-left: {$indent*2}em">
+            <div class="comment-header">
+                <xsl:choose>
+                    <xsl:when test="user">
+                        <xsl:variable name="user">
+                            <xsl:call-template name="lj-tags">
+                                <xsl:with-param name="s">&lt;lj user=&quot;<xsl:value-of select="user" />&quot; /&gt;</xsl:with-param>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:value-of select="$user" disable-output-escaping="yes" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        (anonymous)
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="string-length(subject)">: <xsl:value-of select="subject" /></xsl:if>
+                <br />
+                <xsl:value-of select="date" />
+            </div>
+            <xsl:variable name="body">
+                <xsl:call-template name="format">
+                    <xsl:with-param name="s" select="body" />
+                </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="body">
+                <xsl:call-template name="lj-tags">
+                    <xsl:with-param name="s" select="$body" />
+                </xsl:call-template>
+            </xsl:variable>
+            <div class="comment-body">
+                <xsl:value-of select="$body" disable-output-escaping="yes" />
+            </div>
+        </div>
+    </xsl:if>
+    <xsl:for-each select="../comment[parentid=current()/id]">
+        <xsl:call-template name="comment">
+            <xsl:with-param name="indent" select="$indent+1" />
+        </xsl:call-template>
+    </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="link-tags">

@@ -17,9 +17,16 @@ for fn in fns:
     s = f.readline()
     if s[:5] != "<?xml":
         outf.write(s)
-    for s in f:
-        outf.write(s)
+    a = f.readlines()
     f.close()
+    try:
+        f = open(srcdir+"/C-"+fn[2:])
+        f.readline()
+        a = a[:len(a)-1] + f.readlines() + [a[-1]]
+        f.close()
+    except:
+        pass
+    outf.write(''.join(a))
 outf.write("</journal>\n")
 outf.close()
 
