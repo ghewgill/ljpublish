@@ -71,6 +71,7 @@
             <address>
                 Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
             </address>
+            <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
         </body>
     </html>
 </xsl:template>
@@ -137,6 +138,7 @@
                 <address>
                     Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
                 </address>
+                <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
             </body>
         </html>
     </xt:document>
@@ -194,6 +196,7 @@
                 <address>
                     Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
                 </address>
+                <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
             </body>
         </html>
     </xt:document>
@@ -376,6 +379,16 @@
                             <xsl:with-param name="taglist" select="props/taglist" />
                         </xsl:call-template>
                     </xsl:if>
+                </div>
+                <div class="entry-userpic">
+                    <xsl:choose>
+                        <xsl:when test="props/picture_keyword">
+                            <img src="{/journal/userpics/userpic[@keyword=current()/props/picture_keyword]/@url}" />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <img src="{/journal/userpics/userpic[@keyword='*']/@url}" />
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </div>
                 <div class="entry-subject">
                     <xsl:value-of select="subject" />

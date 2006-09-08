@@ -12,6 +12,7 @@ for fn in os.listdir(srcdir):
     if re.match("L-\d+$", fn):
         fns += [fn]
 fns.sort(lambda a, b: cmp(int(a[2:]), int(b[2:])))
+fns += ['userpics.xml']
 for fn in fns:
     f = open(srcdir+"/"+fn)
     s = f.readline()
