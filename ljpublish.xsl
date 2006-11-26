@@ -27,7 +27,7 @@
                 <a href="/">hewgill.com</a>
                 &#x2192;
                 Journal
-                <span id="navbar-search"><a href="/search.html">Search</a></span>
+                <span id="navbar-search"><a href="/search">Search</a></span>
             </div>
             <p>
                 This is a mirror of <a href="http://ghewgill.livejournal.com">my ghewgill journal</a> which is published and maintained on livejournal.
@@ -100,7 +100,7 @@
                     <a href="/journal/">Journal</a>
                     &#x2192;
                     <xsl:value-of select="$tagname" />
-                    <span id="navbar-search"><a href="/search.html">Search</a></span>
+                    <span id="navbar-search"><a href="/search">Search</a></span>
                 </div>
                 <p class="tags">
                     <xsl:call-template name="taglist">
@@ -162,23 +162,23 @@
                     <a href="/journal/">Journal</a>
                     &#x2192;
                     <xsl:value-of select="$date" />
-                    <span id="navbar-search"><a href="/search.html">Search</a></span>
+                    <span id="navbar-search"><a href="/search">Search</a></span>
                 </div>
                 <p class="calendar">
                     <xsl:call-template name="yearlist" />
                     <br />
-                    <a href="{substring($date, 1, 4)}-01.html">Jan</a>
-                    <a href="{substring($date, 1, 4)}-02.html">Feb</a>
-                    <a href="{substring($date, 1, 4)}-03.html">Mar</a>
-                    <a href="{substring($date, 1, 4)}-04.html">Apr</a>
-                    <a href="{substring($date, 1, 4)}-05.html">May</a>
-                    <a href="{substring($date, 1, 4)}-06.html">Jun</a>
-                    <a href="{substring($date, 1, 4)}-07.html">Jul</a>
-                    <a href="{substring($date, 1, 4)}-08.html">Aug</a>
-                    <a href="{substring($date, 1, 4)}-09.html">Sep</a>
-                    <a href="{substring($date, 1, 4)}-10.html">Oct</a>
-                    <a href="{substring($date, 1, 4)}-11.html">Nov</a>
-                    <a href="{substring($date, 1, 4)}-12.html">Dec</a>
+                    <a href="{substring($date, 1, 4)}-01">Jan</a>
+                    <a href="{substring($date, 1, 4)}-02">Feb</a>
+                    <a href="{substring($date, 1, 4)}-03">Mar</a>
+                    <a href="{substring($date, 1, 4)}-04">Apr</a>
+                    <a href="{substring($date, 1, 4)}-05">May</a>
+                    <a href="{substring($date, 1, 4)}-06">Jun</a>
+                    <a href="{substring($date, 1, 4)}-07">Jul</a>
+                    <a href="{substring($date, 1, 4)}-08">Aug</a>
+                    <a href="{substring($date, 1, 4)}-09">Sep</a>
+                    <a href="{substring($date, 1, 4)}-10">Oct</a>
+                    <a href="{substring($date, 1, 4)}-11">Nov</a>
+                    <a href="{substring($date, 1, 4)}-12">Dec</a>
                 </p>
                 <table>
                     <tr>
@@ -219,7 +219,7 @@
             <xsl:value-of select="substring($events[1]/eventtime, 1, 4)" />
         </xsl:variable>
         <xsl:if test="$year != $lastyear">
-            <a href="{$prefix}{$year}.html">
+            <a href="{$prefix}{$year}">
                 <xsl:value-of select="$year" />
             </a>
         </xsl:if>
@@ -320,7 +320,7 @@
                 <xsl:value-of select="@name" />
             </xsl:when>
             <xsl:otherwise>
-                <a href="{$prefix}{@name}.html">
+                <a href="{$prefix}{@name}">
                     <xsl:value-of select="@name" />
                 </a>
             </xsl:otherwise>
@@ -332,7 +332,7 @@
             [untagged]
         </xsl:when>
         <xsl:otherwise>
-            <a href="{$prefix}untagged.html">[untagged]</a>
+            <a href="{$prefix}untagged">[untagged]</a>
         </xsl:otherwise>
     </xsl:choose>
 </xsl:template>
@@ -341,7 +341,7 @@
     <xsl:param name="prefix" />
     <tr>
         <td><xsl:value-of select="substring-before(eventtime, ' ')" /></td>
-        <td><a href="{$prefix}entries/{itemid}.html"><xsl:value-of select="subject" /></a></td>
+        <td><a href="{$prefix}entries/{itemid}"><xsl:value-of select="subject" /></a></td>
         <td><xsl:value-of select="props/taglist" /></td>
     </tr>
 </xsl:template>
@@ -362,17 +362,17 @@
                     <a href="/journal/">Journal</a>
                     &#x2192;
                     <xsl:value-of select="subject" />
-                    <span id="navbar-search"><a href="/search.html">Search</a></span>
+                    <span id="navbar-search"><a href="/search">Search</a></span>
                 </div>
                 <!--div>
-                    <a href="entries/{preceding-sibling::event[not(security)]/itemid}.html">prev</a>
-                    <a href="entries/{following-sibling::event[not(security)]/itemid}.html">next</a>
+                    <a href="entries/{preceding-sibling::event[not(security)]/itemid}">prev</a>
+                    <a href="entries/{following-sibling::event[not(security)]/itemid}">next</a>
                 </div-->
                 <div class="entry-header">
                     Date:
                     <xsl:variable name="year" select="substring-before(eventtime, '-')" />
                     <xsl:variable name="month" select="substring-before(substring-after(eventtime, '-'), '-')" />
-                    <a href="../calendar/{$year}.html"><xsl:value-of select="$year" /></a>-<a href="../calendar/{$year}-{$month}.html"><xsl:value-of select="$month" /></a>-<xsl:value-of select="substring-after(substring-after(eventtime, '-'), '-')" /><br />
+                    <a href="../calendar/{$year}"><xsl:value-of select="$year" /></a>-<a href="../calendar/{$year}-{$month}"><xsl:value-of select="$month" /></a>-<xsl:value-of select="substring-after(substring-after(eventtime, '-'), '-')" /><br />
                     <xsl:if test="props/taglist">
                         Tags:
                         <xsl:call-template name="link-tags">
@@ -494,7 +494,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
-    <a href="../tags/{$tag}.html"><xsl:value-of select="$tag" /></a>
+    <a href="../tags/{$tag}"><xsl:value-of select="$tag" /></a>
     <xsl:variable name="rest" select="substring-after($taglist, ', ')" />
     <xsl:if test="$rest">
         <xsl:if test="$rest">, </xsl:if>
