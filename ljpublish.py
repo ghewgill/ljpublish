@@ -1,4 +1,4 @@
-import os, re, sys
+import codecs, os, re, sys
 import xml.dom.minidom
 
 srcdir = sys.argv[1]
@@ -59,3 +59,8 @@ f.write("</tags>\n")
 f.close()
 
 os.system("xt all.xml ljpublish.xsl %s/index.html" % destdir)
+
+for fn in os.listdir(os.path.join(destdir, "entries")):
+    if '?' in fn or [x for x in fn if ord(x) >= 128]:
+        print "Error: encoding of:", fn
+        sys.exit(1)

@@ -29,48 +29,51 @@
                 Journal
                 <span id="navbar-search"><a href="/search">Search</a></span>
             </div>
-            <p>
-                This is a mirror of <a href="http://ghewgill.livejournal.com">my ghewgill journal</a> which is published and maintained on livejournal.
-            </p>
-            <p class="calendar">
-                <xsl:call-template name="yearlist">
-                    <xsl:with-param name="prefix" select="'calendar/'" />
-                </xsl:call-template>
-            </p>
-            <xsl:call-template name="yearpages">
-                <xsl:with-param name="journal" select="$journal" />
-            </xsl:call-template>
-            <p class="tags">
-                <xsl:call-template name="taglist">
+            <xsl:call-template name="google-ads" />
+            <div id="body">
+                <p>
+                    This is a mirror of <a href="http://ghewgill.livejournal.com">my ghewgill journal</a> which is published and maintained on livejournal.
+                </p>
+                <p class="calendar">
+                    <xsl:call-template name="yearlist">
+                        <xsl:with-param name="prefix" select="'calendar/'" />
+                    </xsl:call-template>
+                </p>
+                <xsl:call-template name="yearpages">
                     <xsl:with-param name="journal" select="$journal" />
-                    <xsl:with-param name="prefix" select="'tags/'" />
-                    <xsl:with-param name="curtag" select="'*'" />
                 </xsl:call-template>
-            </p>
-            <xsl:for-each select="document('tags.xml')/tags/tag">
+                <p class="tags">
+                    <xsl:call-template name="taglist">
+                        <xsl:with-param name="journal" select="$journal" />
+                        <xsl:with-param name="prefix" select="'tags/'" />
+                        <xsl:with-param name="curtag" select="'*'" />
+                    </xsl:call-template>
+                </p>
+                <xsl:for-each select="document('tags.xml')/tags/tag">
+                    <xsl:call-template name="tagpage">
+                        <xsl:with-param name="journal" select="$journal" />
+                        <xsl:with-param name="tag" select="@name" />
+                    </xsl:call-template>
+                </xsl:for-each>
                 <xsl:call-template name="tagpage">
                     <xsl:with-param name="journal" select="$journal" />
-                    <xsl:with-param name="tag" select="@name" />
                 </xsl:call-template>
-            </xsl:for-each>
-            <xsl:call-template name="tagpage">
-                <xsl:with-param name="journal" select="$journal" />
-            </xsl:call-template>
-            <table>
-                <tr>
-                    <th class="summary-heading">Date</th>
-                    <th class="summary-heading">Title</th>
-                    <th class="summary-heading">Tags</th>
-                </tr>
-                <xsl:for-each select="event[not(security)]">
-                    <xsl:sort select="itemid" data-type="number" order="descending" />
-                    <xsl:call-template name="summary" />
-                    <xsl:call-template name="entry" />
-                </xsl:for-each>
-            </table>
-            <address>
-                Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
-            </address>
+                <table>
+                    <tr>
+                        <th class="summary-heading">Date</th>
+                        <th class="summary-heading">Title</th>
+                        <th class="summary-heading">Tags</th>
+                    </tr>
+                    <xsl:for-each select="event[not(security)]">
+                        <xsl:sort select="itemid" data-type="number" order="descending" />
+                        <xsl:call-template name="summary" />
+                        <xsl:call-template name="entry" />
+                    </xsl:for-each>
+                </table>
+                <address>
+                    Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
+                </address>
+            </div>
             <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
         </body>
     </html>
@@ -102,42 +105,45 @@
                     <xsl:value-of select="$tagname" />
                     <span id="navbar-search"><a href="/search">Search</a></span>
                 </div>
-                <p class="tags">
-                    <xsl:call-template name="taglist">
-                        <xsl:with-param name="journal" select="$journal" />
-                        <xsl:with-param name="curtag" select="$tag" />
-                    </xsl:call-template>
-                </p>
-                <table>
-                    <tr>
-                        <th class="summary-heading">Date</th>
-                        <th class="summary-heading">Title</th>
-                        <th class="summary-heading">Tags</th>
-                    </tr>
-                    <xsl:choose>
-                        <xsl:when test="$tag">
-                            <xsl:for-each select="itemid">
-                                <xsl:sort select="." data-type="number" order="descending" />
-                                <xsl:for-each select="$journal/event[not(security)][itemid = current()]">
+                <xsl:call-template name="google-ads" />
+                <div id="body">
+                    <p class="tags">
+                        <xsl:call-template name="taglist">
+                            <xsl:with-param name="journal" select="$journal" />
+                            <xsl:with-param name="curtag" select="$tag" />
+                        </xsl:call-template>
+                    </p>
+                    <table>
+                        <tr>
+                            <th class="summary-heading">Date</th>
+                            <th class="summary-heading">Title</th>
+                            <th class="summary-heading">Tags</th>
+                        </tr>
+                        <xsl:choose>
+                            <xsl:when test="$tag">
+                                <xsl:for-each select="itemid">
+                                    <xsl:sort select="." data-type="number" order="descending" />
+                                    <xsl:for-each select="$journal/event[not(security)][itemid = current()]">
+                                        <xsl:call-template name="summary">
+                                            <xsl:with-param name="prefix" select="'../'" />
+                                        </xsl:call-template>
+                                    </xsl:for-each>
+                                </xsl:for-each>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:for-each select="$journal/event[not(security) and not(props/taglist)]">
+                                    <xsl:sort select="itemid" data-type="number" order="descending" />
                                     <xsl:call-template name="summary">
                                         <xsl:with-param name="prefix" select="'../'" />
                                     </xsl:call-template>
                                 </xsl:for-each>
-                            </xsl:for-each>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:for-each select="$journal/event[not(security) and not(props/taglist)]">
-                                <xsl:sort select="itemid" data-type="number" order="descending" />
-                                <xsl:call-template name="summary">
-                                    <xsl:with-param name="prefix" select="'../'" />
-                                </xsl:call-template>
-                            </xsl:for-each>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </table>
-                <address>
-                    Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
-                </address>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </table>
+                    <address>
+                        Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
+                    </address>
+                </div>
                 <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
             </body>
         </html>
@@ -164,38 +170,41 @@
                     <xsl:value-of select="$date" />
                     <span id="navbar-search"><a href="/search">Search</a></span>
                 </div>
-                <p class="calendar">
-                    <xsl:call-template name="yearlist" />
-                    <br />
-                    <a href="{substring($date, 1, 4)}-01">Jan</a>
-                    <a href="{substring($date, 1, 4)}-02">Feb</a>
-                    <a href="{substring($date, 1, 4)}-03">Mar</a>
-                    <a href="{substring($date, 1, 4)}-04">Apr</a>
-                    <a href="{substring($date, 1, 4)}-05">May</a>
-                    <a href="{substring($date, 1, 4)}-06">Jun</a>
-                    <a href="{substring($date, 1, 4)}-07">Jul</a>
-                    <a href="{substring($date, 1, 4)}-08">Aug</a>
-                    <a href="{substring($date, 1, 4)}-09">Sep</a>
-                    <a href="{substring($date, 1, 4)}-10">Oct</a>
-                    <a href="{substring($date, 1, 4)}-11">Nov</a>
-                    <a href="{substring($date, 1, 4)}-12">Dec</a>
-                </p>
-                <table>
-                    <tr>
-                        <th class="summary-heading">Date</th>
-                        <th class="summary-heading">Title</th>
-                        <th class="summary-heading">Tags</th>
-                    </tr>
-                    <xsl:for-each select="$journal/event[not(security)][starts-with(eventtime, $date)]">
-                        <xsl:sort select="itemid" data-type="number" order="descending" />
-                        <xsl:call-template name="summary">
-                            <xsl:with-param name="prefix" select="'../'" />
-                        </xsl:call-template>
-                    </xsl:for-each>
-                </table>
-                <address>
-                    Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
-                </address>
+                <xsl:call-template name="google-ads" />
+                <div id="body">
+                    <p class="calendar">
+                        <xsl:call-template name="yearlist" />
+                        <br />
+                        <a href="{substring($date, 1, 4)}-01">Jan</a>
+                        <a href="{substring($date, 1, 4)}-02">Feb</a>
+                        <a href="{substring($date, 1, 4)}-03">Mar</a>
+                        <a href="{substring($date, 1, 4)}-04">Apr</a>
+                        <a href="{substring($date, 1, 4)}-05">May</a>
+                        <a href="{substring($date, 1, 4)}-06">Jun</a>
+                        <a href="{substring($date, 1, 4)}-07">Jul</a>
+                        <a href="{substring($date, 1, 4)}-08">Aug</a>
+                        <a href="{substring($date, 1, 4)}-09">Sep</a>
+                        <a href="{substring($date, 1, 4)}-10">Oct</a>
+                        <a href="{substring($date, 1, 4)}-11">Nov</a>
+                        <a href="{substring($date, 1, 4)}-12">Dec</a>
+                    </p>
+                    <table>
+                        <tr>
+                            <th class="summary-heading">Date</th>
+                            <th class="summary-heading">Title</th>
+                            <th class="summary-heading">Tags</th>
+                        </tr>
+                        <xsl:for-each select="$journal/event[not(security)][starts-with(eventtime, $date)]">
+                            <xsl:sort select="itemid" data-type="number" order="descending" />
+                            <xsl:call-template name="summary">
+                                <xsl:with-param name="prefix" select="'../'" />
+                            </xsl:call-template>
+                        </xsl:for-each>
+                    </table>
+                    <address>
+                        Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
+                    </address>
+                </div>
                 <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
             </body>
         </html>
@@ -337,17 +346,51 @@
     </xsl:choose>
 </xsl:template>
 
+<xsl:template name="urlify">
+    <xsl:value-of select="itemid" />-<xsl:value-of select="
+        translate(translate(translate(translate(translate(translate(translate(translate(translate(translate(translate(translate(subject,
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),
+            '&#x00e0;&#x00e1;&#x00e2;', 'aaa'),
+            '&#x0109;', 'c'),
+            '&#x00e8;&#x00e9;&#x00ea;', 'eee'),
+            '&#x011d;', 'g'),
+            '&#x0125;', 'h'),
+            '&#x0135;', 'j'),
+            '&#x00ec;&#x00ed;&#x00ee;', 'iii'),
+            '&#x00fe;&#x00f3;&#x00f4;', 'ooo'),
+            '&#x015d;', 's'),
+            '&#x00f9;&#x00fa;&#x00fb;&#x016d;', 'uuuu'),
+            ' !&quot;#$%&amp;()*+,-./:,&lt;=&gt;?@[\]^_`{|}~', '-')
+        " />
+</xsl:template>
+
 <xsl:template name="summary">
     <xsl:param name="prefix" />
     <tr>
         <td><xsl:value-of select="substring-before(eventtime, ' ')" /></td>
-        <td><a href="{$prefix}entries/{itemid}"><xsl:value-of select="subject" /></a></td>
+        <xsl:variable name="linktitle">
+            <xsl:call-template name="urlify" />
+        </xsl:variable>
+        <td><a href="{$prefix}entries/{$linktitle}"><xsl:value-of select="subject" /></a></td>
         <td><xsl:value-of select="props/taglist" /></td>
     </tr>
 </xsl:template>
 
 <xsl:template name="entry">
+    <xsl:variable name="linktitle">
+        <xsl:call-template name="urlify" />
+    </xsl:variable>
     <xt:document method="xml" href="entries/{itemid}.html">
+        <html>
+            <head>
+                <meta http-equiv="Refresh" content="0; {$linktitle}" />
+            </head>
+            <body>
+                Moved to <a href="{$linktitle}"><xsl:value-of select="$linktitle" />.html</a>.
+            </body>
+        </html>
+    </xt:document>
+    <xt:document method="xml" href="entries/{$linktitle}.html">
         <html>
             <head>
                 <title><xsl:value-of select="subject" /></title>
@@ -364,75 +407,79 @@
                     <xsl:value-of select="subject" />
                     <span id="navbar-search"><a href="/search">Search</a></span>
                 </div>
-                <!--div>
-                    <a href="entries/{preceding-sibling::event[not(security)]/itemid}">prev</a>
-                    <a href="entries/{following-sibling::event[not(security)]/itemid}">next</a>
-                </div-->
-                <div class="entry-header">
-                    Date:
-                    <xsl:variable name="year" select="substring-before(eventtime, '-')" />
-                    <xsl:variable name="month" select="substring-before(substring-after(eventtime, '-'), '-')" />
-                    <a href="../calendar/{$year}"><xsl:value-of select="$year" /></a>-<a href="../calendar/{$year}-{$month}"><xsl:value-of select="$month" /></a>-<xsl:value-of select="substring-after(substring-after(eventtime, '-'), '-')" /><br />
-                    <xsl:if test="props/taglist">
-                        Tags:
-                        <xsl:call-template name="link-tags">
-                            <xsl:with-param name="taglist" select="props/taglist" />
-                        </xsl:call-template>
-                    </xsl:if>
-                </div>
-                <div class="entry-userpic">
+                <xsl:call-template name="google-ads" />
+                <div id="body">
+                    <!--div>
+                        <a href="entries/{preceding-sibling::event[not(security)]/itemid}">prev</a>
+                        <a href="entries/{following-sibling::event[not(security)]/itemid}">next</a>
+                    </div-->
+                    <div class="entry-header">
+                        Date:
+                        <xsl:variable name="year" select="substring-before(eventtime, '-')" />
+                        <xsl:variable name="month" select="substring-before(substring-after(eventtime, '-'), '-')" />
+                        <a href="../calendar/{$year}"><xsl:value-of select="$year" /></a>-<a href="../calendar/{$year}-{$month}"><xsl:value-of select="$month" /></a>-<xsl:value-of select="substring-after(substring-after(eventtime, '-'), '-')" /><br />
+                        <xsl:if test="props/taglist">
+                            Tags:
+                            <xsl:call-template name="link-tags">
+                                <xsl:with-param name="taglist" select="props/taglist" />
+                            </xsl:call-template>
+                        </xsl:if>
+                    </div>
+                    <div class="entry-userpic">
+                        <xsl:choose>
+                            <xsl:when test="props/picture_keyword">
+                                <img src="{/journal/userpics/userpic[@keyword=current()/props/picture_keyword]/@url}" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <img src="{/journal/userpics/userpic[@keyword='*']/@url}" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </div>
+                    <div class="entry-subject">
+                        <xsl:value-of select="subject" />
+                    </div>
                     <xsl:choose>
-                        <xsl:when test="props/picture_keyword">
-                            <img src="{/journal/userpics/userpic[@keyword=current()/props/picture_keyword]/@url}" />
+                        <xsl:when test="props/opt_preformatted = '1'">
+                            <xsl:variable name="body">
+                                <xsl:call-template name="lj-tags">
+                                    <xsl:with-param name="s" select="event" />
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <div class="entry-body">
+                                <xsl:value-of select="$body" disable-output-escaping="yes" />
+                            </div>
                         </xsl:when>
                         <xsl:otherwise>
-                            <img src="{/journal/userpics/userpic[@keyword='*']/@url}" />
+                            <xsl:variable name="body">
+                                <xsl:call-template name="format">
+                                    <xsl:with-param name="s" select="event" />
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <xsl:variable name="body">
+                                <xsl:call-template name="lj-tags">
+                                    <xsl:with-param name="s" select="$body" />
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <div class="entry-body">
+                                <xsl:value-of select="$body" disable-output-escaping="yes" />
+                            </div>
                         </xsl:otherwise>
                     </xsl:choose>
+                    <p class="lj-link">
+                        <a href="{url}">Link</a>
+                    </p>
+                    <xsl:if test="not(props/opt_nocomments) or props/opt_nocomments != '1'">
+                        <xsl:for-each select="comments/comment[string-length(parentid)=0]">
+                            <xsl:call-template name="comment">
+                                <xsl:with-param name="indent" select="0" />
+                            </xsl:call-template>
+                        </xsl:for-each>
+                    </xsl:if>
+                    <address>
+                        Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
+                    </address>
                 </div>
-                <div class="entry-subject">
-                    <xsl:value-of select="subject" />
-                </div>
-                <xsl:choose>
-                    <xsl:when test="props/opt_preformatted = '1'">
-                        <xsl:variable name="body">
-                            <xsl:call-template name="lj-tags">
-                                <xsl:with-param name="s" select="event" />
-                            </xsl:call-template>
-                        </xsl:variable>
-                        <div class="entry-body">
-                            <xsl:value-of select="$body" disable-output-escaping="yes" />
-                        </div>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:variable name="body">
-                            <xsl:call-template name="format">
-                                <xsl:with-param name="s" select="event" />
-                            </xsl:call-template>
-                        </xsl:variable>
-                        <xsl:variable name="body">
-                            <xsl:call-template name="lj-tags">
-                                <xsl:with-param name="s" select="$body" />
-                            </xsl:call-template>
-                        </xsl:variable>
-                        <div class="entry-body">
-                            <xsl:value-of select="$body" disable-output-escaping="yes" />
-                        </div>
-                    </xsl:otherwise>
-                </xsl:choose>
-                <p class="lj-link">
-                    <a href="{url}">Link</a>
-                </p>
-                <xsl:if test="not(props/opt_nocomments) or props/opt_nocomments != '1'">
-                    <xsl:for-each select="comments/comment[string-length(parentid)=0]">
-                        <xsl:call-template name="comment">
-                            <xsl:with-param name="indent" select="0" />
-                        </xsl:call-template>
-                    </xsl:for-each>
-                </xsl:if>
-                <address>
-                    Greg Hewgill <a href="mailto:greg@hewgill.com">&lt;greg@hewgill.com&gt;</a>
-                </address>
+                <xsl:comment>#include virtual="/google-analytics.inc"</xsl:comment>
             </body>
         </html>
     </xt:document>
@@ -545,6 +592,21 @@
             <xsl:value-of select="$s" />
         </xsl:otherwise>
     </xsl:choose>
+</xsl:template>
+
+<xsl:template name="google-ads">
+    <div id="ad">
+        <script type="text/javascript"><xsl:comment>
+        google_ad_client = "pub-5805981147274775";
+        //120x600, created 12/15/07, journal
+        google_ad_slot = "9836732755";
+        google_ad_width = 120;
+        google_ad_height = 600;
+        //</xsl:comment></script>
+        <script type="text/javascript"
+        src="http://pagead2.googlesyndication.com/pagead/show_ads.js" xml:space="preserve">
+        </script>
+    </div>
 </xsl:template>
 
 </xsl:stylesheet>
