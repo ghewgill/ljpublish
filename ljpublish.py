@@ -22,8 +22,9 @@ for fn in fns:
     f.close()
     try:
         f = open(srcdir+"/C-"+fn[2:])
-        f.readline()
-        a = a[:len(a)-1] + f.readlines() + [a[-1]]
+        lines = f.readlines()
+        lines[0] = re.sub(r"<\?.*?\?>", "", lines[0])
+        a = a[:len(a)-1] + lines + [a[-1]]
         f.close()
     except:
         pass
