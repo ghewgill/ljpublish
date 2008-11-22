@@ -18,7 +18,7 @@ for fn in fns:
     s = f.readline()
     if s[:5] != "<?xml":
         outf.write(s)
-    a = f.readlines()
+    a = [re.sub("\4", "", x) for x in f.readlines()]
     f.close()
     try:
         f = open(srcdir+"/C-"+fn[2:])
