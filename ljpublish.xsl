@@ -466,7 +466,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                     <p class="lj-link">
-                        <a href="{url}">Link</a>
+                        <a href="{url}">Comment</a>
                     </p>
                     <xsl:if test="not(props/opt_nocomments) or props/opt_nocomments != '1'">
                         <xsl:for-each select="comments/comment[string-length(parentid)=0]">
